@@ -14,8 +14,11 @@
 
 #define COLOR_SPEED 200
 #define SMOOTHING_RATIO 64
+#define DELAY_SMOOTHING 150
 
-unsigned int last_updated_time;
+unsigned long delay_time;
+
+unsigned int next_hue_updated_time;
 
 unsigned int sampling_period_us;
 double vReal[SAMPLES];
@@ -43,9 +46,14 @@ void setup() {
   pixels.begin();
   pixels.setBrightness(MAX_BRIGHTNESS);
 
+  delay_time = millis();
+  next_hue_updated_time = delay_time;
+  last_brightness = 0;
   hueShift = 0;
+  brightness = 0;
+  time_smoothed_brightness = 0;
 
-  last_updated_time = millis();
+  next_hue_updated_time = millis();
 }
 
 void loop() {
@@ -73,18 +81,23 @@ void loop() {
   }
   if (brightness > last_brightness) {
     time_smoothed_brightness = brightness;
+    delay_time = millis() + DELAY_SMOOTHING;
   } else {
-    time_smoothed_brightness = brightness + last_brightness * (SMOOTHING_RATIO - 1);
-    time_smoothed_brightness /= SMOOTHING_RATIO;
+    if (millis() > delay_time) {
+      time_smoothed_brightness = brightness + last_brightness * (SMOOTHING_RATIO - 1);
+      time_smoothed_brightness /= SMOOTHING_RATIO;
+    } else {
+      time_smoothed_brightness = last_brightness;
+    }
   }
 
   Serial.println(time_smoothed_brightness);
   
   last_brightness = time_smoothed_brightness;
    
-  if (millis() > last_updated_time) {
+  if (millis() > next_hue_updated_time) {
     hueShift ++;
-    last_updated_time = last_updated_time + COLOR_SPEED;
+    next_hue_updated_time = next_hue_updated_time + COLOR_SPEED;
   }
   
   for (int i = 0; i < NUMPIXELS / 2; i++) {
