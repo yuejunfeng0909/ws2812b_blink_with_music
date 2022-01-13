@@ -1,4 +1,3 @@
-// #include <arduinoFFT.h>
 #include <Adafruit_NeoPixel.h>
 
 #define PIN          19  // digital pin used to drive the LED strip
@@ -24,7 +23,6 @@ unsigned int sampling_period_us;
 int vReal[SAMPLES];
 int vImag[SAMPLES];
 unsigned long newTime;
-// arduinoFFT FFT = arduinoFFT(vReal, vImag, SAMPLES, SAMPLING_FREQ);
 
 // LED color
 Adafruit_NeoPixel pixels(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
@@ -73,7 +71,6 @@ void setup() {
 }
 
 void loop() {
-  //  int iteration_time_taken = millis();
 
   // sample audio pin
   for (int i = 0; i < SAMPLES; i++) {
@@ -85,11 +82,6 @@ void loop() {
     }
   }
 
-  // FFT.DCRemoval();
-  // FFT.Windowing(FFT_WIN_TYP_HAMMING, FFT_FORWARD);
-  // FFT.Compute(FFT_FORWARD);
-  // FFT.ComplexToMagnitude();
-
   brightness = Approx_FFT(vReal, SAMPLES, SAMPLING_FREQ);
   Serial.print(brightness);Serial.print(",");
   subtract_val = analogRead(SUBTRACT_PIN);
@@ -97,8 +89,6 @@ void loop() {
   multiplier = analogRead(MULTIPLIER_PIN) / 64.0;
   Serial.print(multiplier);Serial.print(",");
   
-//  brightness = max(0, min(255, multiplier * (brightness / 64 - subtract_val)));
-//  Serial.print(brightness);Serial.print(",");
   brightness = max(0, min(255, multiplier * (brightness / 16 - subtract_val))) ;
   
   if (brightness > last_brightness) {
