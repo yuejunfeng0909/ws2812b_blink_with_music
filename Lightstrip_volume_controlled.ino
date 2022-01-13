@@ -14,7 +14,7 @@
 
 #define COLOR_SPEED 200
 #define SMOOTHING_RATIO 64
-#define DELAY_SMOOTHING 150
+#define DELAY_SMOOTHING 100
 
 unsigned long delay_time;
 
