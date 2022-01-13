@@ -1,1 +1,1 @@
-Lightstrip_volume_controlled
+This project utilizes ApproxFFT code by [abhilash_patel](https://create.arduino.cc/projecthub/abhilashpatel121/approxfft-fastest-fft-function-for-arduino-fd4917?ref=user&ref_id=1593632&offset=0) to calculate the frequency with maximum magnitude from the microphone and use the magnitude as brightness of the lightstrip. Some smoothing processing is done to make sure that the lightstrip does not change brightness too fast to look weird to the human eye.
